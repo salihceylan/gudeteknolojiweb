@@ -1,0 +1,26 @@
+import { launch, ready, sleep, URL0, shot } from './util.mjs';
+const s = await launch();
+const { page, log } = s;
+const popups = [];
+s.ctx.on('page', (p) => popups.push(p.url()));
+await page.goto(URL0, { waitUntil: 'load' });
+await ready(page); await sleep(2500);
+await page.mouse.move(100, 800);
+const tab = async (n) => { for (let i = 0; i < n; i++) { await page.keyboard.press('Tab'); await sleep(150); } };
+const files = [];
+await tab(10); await page.keyboard.press('Enter'); await sleep(2000);
+await tab(3);
+await page.keyboard.press('Space'); await sleep(3000);
+files.push(await shot(page, 'kb9_space_on_link'));
+await page.keyboard.press('Enter'); await sleep(3000);
+files.push(await shot(page, 'kb9_enter_on_link'));
+await page.keyboard.press('NumpadEnter'); await sleep(2500);
+files.push(await shot(page, 'kb9_numpadenter_on_link'));
+// theme segment: 3 more tabs to Teklif Pro, then 1 -> Açık
+await tab(4);
+await page.keyboard.press('Enter'); await sleep(2000);
+files.push(await shot(page, 'kb9_enter_on_acik'));
+await page.keyboard.press('Space'); await sleep(2000);
+files.push(await shot(page, 'kb9_space_on_acik'));
+console.log(popups, log.errors);
+await s.close();

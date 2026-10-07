@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Güde Teknoloji | Zayıf Akım ve Teknoloji Sistemleri</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f7f8fa;
+    color:#18202c;
+    line-height:1.6;
+}
+
+.saka-band{
+    background:#111827;
+    color:#ffffff;
+    text-align:center;
+    padding:8px 12px;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.2px;
+}
+
+header{
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.navbar{
+    max-width:1200px;
+    margin:auto;
+    padding:12px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo img{
+    height:65px;
+    width:auto;
+}
+
+nav{
+    display:flex;
+    gap:25px;
+    align-items:center;
+}
+
+nav a{
+    text-decoration:none;
+    color:#263244;
+    font-weight:600;
+    font-size:15px;
+}
+
+nav a:hover{
+    color:#b98726;
+}
+
+.teklif-btn{
+    background:#b98726;
+    color:white !important;
+    padding:10px 18px;
+    border-radius:7px;
+}
+
+.hero{
+    min-height:650px;
+    background:
+    linear-gradient(
+        110deg,
+        rgba(15,23,42,.97),
+        rgba(25,39,62,.90)
+    );
+    color:white;
+    display:flex;
+    align-items:center;
+}
+
+.hero-inner{
+    max-width:1200px;
+    width:100%;
+    margin:auto;
+    padding:80px 24px;
+}
+
+.hero small{
+    color:#e2b550;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.hero h1{
+    max-width:850px;
+    font-size:56px;
+    line-height:1.1;
+    margin:18px 0;
+}
+
+.hero p{
+    max-width:700px;
+    color:#d2d8e2;
+    font-size:20px;
+    margin-bottom:30px;
+}
+
+.buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.button{
+    display:inline-block;
+    padding:14px 23px;
+    border-radius:7px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.primary{
+    background:#d49b31;
+    color:white;
+}
+
+.secondary{
+    border:1px solid #6b7280;
+    color:white;
+}
+
+section{
+    padding:85px 24px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.section-title{
+    max-width:700px;
+    margin-bottom:45px;
+}
+
+.section-title span{
+    color:#b98726;
+    font-weight:bold;
+}
+
+.section-title h2{
+    font-size:38px;
+    margin-top:5px;
+}
+
+.services{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    border:1px solid #e4e7eb;
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+.card h3{
+    margin-bottom:12px;
+    color:#192536;
+}
+
+.card p{
+    color:#687384;
+}
+
+.about{
+    background:#111827;
+    color:white;
+}
+
+.about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:70px;
+    align-items:center;
+}
+
+.about h2{
+    font-size:40px;
+    margin-bottom:20px;
+}
+
+.about p{
+    color:#c6cbd4;
+    margin-bottom:15px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.stat{
+    background:#1d2939;
+    padding:25px;
+    border-radius:10px;
+}
+
+.stat strong{
+    color:#e7b650;
+    display:block;
+    font-size:23px;
+}
+
+.references{
+    text-align:center;
+}
+
+#referanslar{
+    scroll-margin-top:100px;
+    padding-top:100px;
+}
+
+.reference-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:35px;
+}
+
+.reference{
+    background:white;
+    border:1px solid #e5e7eb;
+    padding:25px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.offer{
+    background:#e9edf2;
+}
+
+.offer-box{
+    background:white;
+    max-width:1200px;
+    margin:auto;
+    border-radius:15px;
+    padding:45px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+}
+
+.offer-box h2{
+    font-size:34px;
+}
+
+.offer-box p{
+    color:#677281;
+    max-width:650px;
+}
+
+.disabled-btn{
+    background:#9ca3af;
+    color:white;
+    padding:14px 24px;
+    border-radius:7px;
+    white-space:nowrap;
+}
+
+.contact{
+    background:#101827;
+    color:white;
+}
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+}
+
+.contact h2{
+    font-size:38px;
+    margin-bottom:20px;
+}
+
+.contact p{
+    color:#c4cad3;
+}
+
+.contact-box{
+    background:#1d2939;
+    padding:30px;
+    border-radius:12px;
+}
+
+.contact-box a{
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.contact-box a:hover{
+    color:#e7b650;
+}
+
+.whatsapp-btn{
+    display:inline-block;
+    background:#25D366;
+    color:white !important;
+    padding:12px 20px;
+    border-radius:7px;
+    font-weight:bold;
+}
+
+.whatsapp-btn:hover{
+    opacity:.9;
+}
+
+footer{
+    background:#090f1b;
+    color:#9ca3af;
+    text-align:center;
+    padding:25px;
+}
+
+@media(max-width:850px){
+
+    nav{
+        display:none;
+    }
+
+    .hero h1{
+        font-size:39px;
+    }
+
+    .services{
+        grid-template-columns:1fr;
+    }
+
+    .about-grid{
+        grid-template-columns:1fr;
+    }
+
+    .reference-grid{
+        grid-template-columns:1fr;
+    }
+
+    .offer-box{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="saka-band">
+Bu site Hüseyin ELMASKONAY tarafından Mehmet AÇIKEL ile beraber hazırlanmıştır 
+</div>
+
+<header>
+
+<div class="navbar">
+
+<div class="logo">
+<img src="images/logo.jpg" alt="Güde Teknoloji">
+</div>
+
+<nav>
+<a href="#anasayfa">Ana Sayfa</a>
+<a href="#hizmetler">Hizmetler</a>
+<a href="#hakkimizda">Hakkımızda</a>
+<a href="#referanslar">Referanslar</a>
+<a href="#iletisim">İletişim</a>
+<a class="teklif-btn" href="https://teklif.gudeteknoloji.com/">Teklif Pro</a>
+</nav>
+
+</div>
+
+</header>
+
+
+<section class="hero" id="anasayfa">
+
+<div class="hero-inner">
+
+<small>GÜDE TEKNOLOJİ</small>
+
+<h1>
+Zayıf Akım ve Teknoloji Sistemlerinde Profesyonel Çözümler
+</h1>
+
+<p>
+Projelerin keşif aşamasından sistem tasarımına, kurulumdan devreye almaya ve teknik servise kadar uçtan uca çözümler sunuyoruz.
+</p>
+
+<div class="buttons">
+
+<a class="button primary" href="#hizmetler">
+Çözümlerimizi İnceleyin
+</a>
+
+<a class="button secondary" href="#iletisim">
+Bize Ulaşın
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="hizmetler">
+
+<div class="container">
+
+<div class="section-title">
+
+<span>HİZMETLERİMİZ</span>
+
+<h2>
+Teknolojiyi projenizin ihtiyacına göre uyguluyoruz
+</h2>
+
+</div>
+
+
+<div class="services">
+
+<div class="card">
+<h3>CCTV Kamera Sistemleri</h3>
+<p>
+IP ve analog kamera sistemleri, kayıt çözümleri, ağ altyapısı ve profesyonel görüntüleme sistemleri.
+</p>
+</div>
+
+<div class="card">
+<h3>İnterkom Sistemleri</h3>
+<p>
+IP ve iki telli görüntülü interkom sistemleri, güvenlik ve daire iletişim çözümleri.
+</p>
+</div>
+
+<div class="card">
+<h3>Geçiş Kontrol</h3>
+<p>
+Kartlı geçiş, kapı kontrolü, personel erişimi ve merkezi yönetim sistemleri.
+</p>
+</div>
+
+<div class="card">
+<h3>Turnike ve Bariyer</h3>
+<p>
+Personel ve araç geçişlerinin kontrolü için turnike ve bariyer çözümleri.
+</p>
+</div>
+
+<div class="card">
+<h3>Yangın Algılama</h3>
+<p>
+Yangın algılama, ihbar ve projeye uygun güvenlik sistemleri.
+</p>
+</div>
+
+<div class="card">
+<h3>Akıllı Ev Sistemleri</h3>
+<p>
+Aydınlatma, kontrol, güvenlik ve otomasyon sistemlerinin entegre çözümleri.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="about" id="hakkimizda">
+
+<div class="container about-grid">
+
+<div>
+
+<h2>
+Projeden Sahaya Tek Noktadan Çözüm
+</h2>
+
+<p>
+Sadece ürün temin eden değil doğru sistemi tasarlayan ve sahada çalışır hale getiren bir teknik çözüm yaklaşımıyla çalışıyoruz.
+</p>
+
+<p>
+Kamera, interkom, geçiş kontrolü, otomasyon ve zayıf akım sistemlerinde projelendirme, uygulama ve teknik servis hizmetleri sunuyoruz.
+</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<strong>Keşif</strong>
+Saha ve ihtiyaç analizi
+</div>
+
+<div class="stat">
+<strong>Projelendirme</strong>
+Doğru ürün ve altyapı seçimi
+</div>
+
+<div class="stat">
+<strong>Uygulama</strong>
+Kurulum ve devreye alma
+</div>
+
+<div class="stat">
+<strong>Servis</strong>
+Bakım ve teknik destek
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="referanslar">
+
+<div class="container references">
+
+<div class="section-title" style="margin:auto">
+
+<span>REFERANSLAR</span>
+
+<h2>
+Bazı Projelerimiz
+</h2>
+
+</div>
+
+<div class="reference-grid">
+
+<div class="reference">Folkart Life</div>
+
+<div class="reference">Folkart Time</div>
+
+<div class="reference">Sinpaş Aqua City</div>
+
+<div class="reference">Manisa Meydan Projesi</div>
+
+<div class="reference">TÜPRAŞ</div>
+
+<div class="reference">Teknik Yapı</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="offer" id="teklifpro">
+
+<div class="offer-box">
+
+<div>
+
+<h2>Teklif Pro</h2>
+
+<p>
+Teklif hazırlama, ürün yönetimi, revizyon takibi ve proje süreçlerini daha hızlı ve düzenli yönetmek için geliştirdiğimiz sistem.
+</p>
+
+</div>
+
+<div>
+<a class="teklif-btn" href="https://teklif.gudeteknoloji.com/">Teklif Pro</a>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="contact" id="iletisim">
+
+<div class="container contact-grid">
+
+<div>
+
+<h2>
+Projenizi konuşalım
+</h2>
+
+<p>
+Yeni sistem kurulumu, mevcut sistemlerin yenilenmesi veya teknik servis ihtiyaçlarınız için bizimle iletişime geçebilirsiniz.
+</p>
+
+</div>
+
+<div class="contact-box">
+
+<h3>İletişim</h3>
+
+<p style="margin-top:20px;">
+<strong>Telefon</strong><br>
+<a href="tel:+905437956044">
+(0) 543 795 6044
+</a>
+</p>
+
+<p style="margin-top:18px;">
+<strong>E-Posta</strong><br>
+<a href="mailto:bilgi@gudeteknoloji.com">
+bilgi@gudeteknoloji.com
+</a>
+</p>
+
+<p style="margin-top:18px;">
+<strong>Adres</strong><br>
+Yalı Mah. 6436 Sok. No:37/A<br>
+Karşıyaka / İzmir
+</p>
+
+<p style="margin-top:25px;">
+<a class="whatsapp-btn"
+href="https://wa.me/905437956044"
+target="_blank"
+rel="noopener">
+WhatsApp'tan Ulaşın
+</a>
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<footer>
+© 2026 Güde Teknoloji — Tüm hakları saklıdır.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+import { open, shot, sleep, report, tap } from './common.mjs';
+const th = process.argv[2] || 'light';
+const s = await open({ theme: th });
+await sleep(2000);
+const P = s.page;
+const go = async (name, pos) => { if (pos === 'wheel') { await P.mouse.move(700, 450); await P.mouse.wheel(0, 130); } else { await tap(s, ...pos); } await P.mouse.move(700, 880); await sleep(3500); console.log(name, await shot(s, `t9_${name}`)); };
+await go('camera', [755, 29]);
+await go('products', [827, 29]);
+await go('screen', 'wheel');
+await go('services', [907, 29]);
+// hover kart
+await P.mouse.move(1000, 330); await sleep(1000); console.log('svc hover', await shot(s, 't9_services_hover'));
+await go('process', [981, 29]);
+await go('references', [1061, 29]);
+await P.mouse.move(520, 500); await sleep(1000); console.log('ref hover', await shot(s, 't9_references_hover'));
+await go('contact', [1146, 29]);
+await P.mouse.move(1500, 880);
+await P.mouse.move(1000, 640); await sleep(1000); console.log('contact hover', await shot(s, 't9_contact_hover'));
+console.log(report(s));
+await s.close();

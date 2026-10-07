@@ -1,0 +1,13 @@
+import { launch, ready, sleep, URL0 } from './util.mjs';
+const s = await launch();
+const { page, log, ctx } = s;
+await page.addInitScript(() => { window.__opens = []; const o = window.open; window.open = function (...a) { window.__opens.push(a.slice(0, 3)); return null; }; });
+await page.goto(URL0 + '?menu=1', { waitUntil: 'load', timeout: 90000 });
+await ready(page); await sleep(3500);
+const click = async (x, y) => { await page.mouse.move(x, y); await sleep(100); await page.mouse.down(); await page.mouse.up(); await sleep(900); };
+await click(1148, 539); console.log('Teklif Pro (panel):', JSON.stringify(await page.evaluate(() => window.__opens.splice(0))));
+await click(1166, 607); console.log('phone:', JSON.stringify(await page.evaluate(() => window.__opens.splice(0))));
+await click(1190, 643); console.log('mail:', JSON.stringify(await page.evaluate(() => window.__opens.splice(0))));
+await click(1145, 679); console.log('whatsapp:', JSON.stringify(await page.evaluate(() => window.__opens.splice(0))));
+console.log(log.errors);
+await s.close();

@@ -1,0 +1,11 @@
+import { open, shot, sleep, report, collectLabelBoxes } from './common.mjs';
+const th = process.argv[2] || 'dark';
+const s = await open({ theme: th, menu: true });
+await sleep(2500);
+console.log(await shot(s, 't3_panel_open'));
+const boxes = await collectLabelBoxes(s);
+console.log(JSON.stringify(boxes));
+await sleep(2000);
+await shot(s, 't3_panel_open_after_reload');
+console.log(report(s));
+await s.close();

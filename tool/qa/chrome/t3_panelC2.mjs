@@ -1,0 +1,16 @@
+import { open, shot, sleep, report, tap } from './common.mjs';
+const s = await open({});
+await sleep(1500);
+const P = s.page;
+await tap(s, 1388, 32); await sleep(1800);
+const ls = () => P.evaluate(() => localStorage.getItem('gude-theme'));
+const dt = () => P.evaluate(() => document.documentElement.getAttribute('data-theme'));
+await tap(s, 1283, 770); await sleep(2500); console.log('Sistem(dark pref) ->', await ls(), await dt());
+await P.emulateMedia({ colorScheme: 'light' }); await sleep(4000); console.log('emulate light ->', await dt());
+await P.emulateMedia({ colorScheme: 'dark' }); await sleep(4000); console.log('emulate dark ->', await dt(), await shot(s, 't3C2_sys_dark_again'));
+await P.emulateMedia({ colorScheme: 'light' }); await sleep(4000); console.log('emulate light2 ->', await dt());
+await tap(s, 1122, 770); await sleep(2500); console.log('Açık ->', await ls(), await dt());
+await P.reload({ waitUntil: 'load' }); await sleep(5000);
+console.log('reload ->', await ls(), await dt(), await shot(s, 't3C2_reload_light'));
+console.log(report(s));
+await s.close();

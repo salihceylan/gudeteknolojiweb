@@ -1,0 +1,10 @@
+import { connect, shot, tapCss, sleep } from './lib.mjs';
+const s = await connect();
+tapCss(47, 30); await sleep(5000);
+console.log('logo->top', await shot(s, 'h_0'));
+tapCss(171, 269); await sleep(5000);
+console.log('explore', await shot(s, 'h_1'));
+tapCss(47, 30); await sleep(5000);
+tapCss(84, 325); await sleep(5000);
+console.log('contact', await shot(s, 'h_2'));
+process.exit(0);

@@ -1,0 +1,11 @@
+import { openE, shotE, arg, sleep, report, tap } from './lib2.mjs';
+const s = await openE({ browser: 'edge', size: 'd1440', theme: 'dark' });
+await sleep(2000);
+await tap(s, 294, 591); await sleep(3500);
+console.log('keşfedin', await shotE(s, 'hero_btn1'));
+await tap(s, 72, 32); await sleep(3500);
+console.log('logo top', await shotE(s, 'hero_top2'));
+await tap(s, 500, 591); await sleep(3500);
+console.log('bize ulaşın', await shotE(s, 'hero_btn2'));
+console.log(report(s));
+await s.close();

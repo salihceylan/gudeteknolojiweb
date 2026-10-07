@@ -1,0 +1,13 @@
+import { connect, sleep, adb, shot } from './lib.mjs';
+const s = await connect();
+const mm = () => s.page.evaluate(() => [matchMedia('(prefers-color-scheme: dark)').matches, matchMedia('(prefers-reduced-motion: reduce)').matches, localStorage.getItem('gude-theme')]);
+console.log('raw', await mm());
+const c = await s.ctx.newCDPSession(s.page);
+await c.send('Emulation.setEmulatedMedia', { media: '', features: [{ name: 'prefers-color-scheme', value: '' }, { name: 'prefers-reduced-motion', value: '' }] });
+await sleep(500);
+console.log('after clear (night no)', await mm());
+adb('shell', 'cmd', 'uimode', 'night', 'yes'); await sleep(4000);
+console.log('night yes', await mm(), await shot(s, 'th5_night'));
+adb('shell', 'cmd', 'uimode', 'night', 'no'); await sleep(4000);
+console.log('night no', await mm(), await shot(s, 'th5_day'));
+process.exit(0);

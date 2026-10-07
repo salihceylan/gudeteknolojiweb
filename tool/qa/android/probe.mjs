@@ -1,0 +1,10 @@
+import { open, shot, sleep, report, measureFrames } from '../harness.mjs';
+const t0 = Date.now();
+const s = await open({ browser: 'android', device: 'pixel', url: 'http://localhost:8099/' });
+console.log('load ms', Date.now() - t0);
+const info = await s.page.evaluate(() => ({ w: innerWidth, h: innerHeight, dpr: devicePixelRatio, ua: navigator.userAgent, vv: visualViewport && { w: visualViewport.width, h: visualViewport.height, scale: visualViewport.scale }, dark: matchMedia('(prefers-color-scheme: dark)').matches, rm: matchMedia('(prefers-reduced-motion: reduce)').matches, theme: localStorage.getItem('gude-theme'), sw: document.documentElement.scrollWidth, sh: document.documentElement.scrollHeight, mem: performance.memory && performance.memory.usedJSHeapSize }));
+console.log(JSON.stringify(info));
+await sleep(2500);
+console.log(await measureFrames(s, 2500));
+console.log(report(s));
+console.log(await shot(s, 'p01_open'));

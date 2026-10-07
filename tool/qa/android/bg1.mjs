@@ -1,0 +1,12 @@
+import { connect, shot, tapCss, sleep, adb, countFlutterFrames, measureFrames } from './lib.mjs';
+const s = await connect();
+tapCss(375, 30); await sleep(2200); tapCss(104, 215); await sleep(4500);
+console.log('before bg: rAF', await countFlutterFrames(s, 2000), 'vis', await s.page.evaluate(() => document.visibilityState));
+await shot(s, 'bg_0');
+adb('shell', 'input', 'keyevent', '3'); await sleep(8000);
+console.log('during bg vis', await s.page.evaluate(() => document.visibilityState).catch((e) => 'err ' + e.message));
+adb('shell', 'am', 'start', '-n', 'com.android.chrome/com.google.android.apps.chrome.Main'); await sleep(4000);
+console.log('after resume vis', await s.page.evaluate(() => document.visibilityState), 'rAF', await countFlutterFrames(s, 2000));
+await shot(s, 'bg_1'); await sleep(3000); await shot(s, 'bg_2');
+console.log(await measureFrames(s, 2000));
+process.exit(0);

@@ -1,0 +1,12 @@
+import { connect, countFlutterFrames, tapCss, sleep } from './lib.mjs';
+const s = await connect();
+const nav = async (n, x, y, wait = 4500) => { tapCss(375, 30); await sleep(2000); tapCss(x, y); await sleep(wait); console.log(n, 'rAF/2s:', await countFlutterFrames(s, 2000)); };
+await nav('iletisim', 103, 399);
+await nav('hizmet', 117, 261);
+await nav('hizmet-again-wait', 117, 261, 8000);
+await nav('urunler', 104, 215);
+await nav('hizmet-after-urunler', 117, 261);
+await nav('screen? (ürünler→scroll)', 117, 261, 9000);
+await nav('process', 95, 307);
+await nav('iletisim', 103, 399);
+process.exit(0);

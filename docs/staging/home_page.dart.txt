@@ -1,0 +1,203 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+import '../core/core.dart';
+import '../scenes/camera_scene.dart';
+import '../scenes/contact_scene.dart';
+import '../scenes/hero_camera_block.dart';
+import '../scenes/process_scene.dart';
+import '../scenes/references_scene.dart';
+import '../scenes/remote_door_scene.dart';
+import '../scenes/screen_door_scene.dart';
+import '../scenes/services_scene.dart';
+import '../scenes/teklif_band.dart';
+import '../theme.dart';
+import 'menu_panel.dart';
+import 'nav_model.dart';
+import 'scene_snap.dart';
+import 'top_bar.dart';
+
+/// Önizleme bayrağı: `flutter build web --dart-define=PREVIEW=true` ile derlenen sürümde adres çubuğundan
+/// `?scroll=<ekran yüksekliği katı>`, `?menu=1` ve `?theme=light|dark` verilebilir (görsel kontrol için). Normal derlemede kapalıdır.
+const kPreview = bool.fromEnvironment('PREVIEW');
+
+/// Tek sayfa: üst çubuk + sandviç panel + sahneler. Sahneler dikey scroll ile gezilir; sahne başlarında
+/// çok hafif mıknatıs (SceneSnap) vardır.
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  final _scroll = ScrollController();
+  late final AnimationController _menu = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 600),
+    reverseDuration: const Duration(milliseconds: 420),
+  );
+
+  /// Kaydırma hedefi olan sahnelerin anahtarları (kamera bloğu hesapla bulunur).
+  final _keys = <String, GlobalKey>{
+    for (final id in ['products', 'screen', 'services', 'process', 'references', 'contact']) id: GlobalKey(),
+  };
+
+  late final SceneSnap _snap = SceneSnap(controller: _scroll, anchors: _anchors, viewportHeight: () => _vh);
+
+  double _vh = 800;
+  bool _scrolled = false;
+  String? _active;
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(_onScroll);
+    if (kPreview) WidgetsBinding.instance.addPostFrameCallback((_) => _applyPreview());
+  }
+
+  @override
+  void dispose() {
+    _snap.dispose();
+    _scroll.dispose();
+    _menu.dispose();
+    super.dispose();
+  }
+
+  void _applyPreview() {
+    final q = Uri.base.queryParameters;
+    final s = double.tryParse(q['scroll'] ?? '');
+    if (s != null && _scroll.hasClients) _scroll.jumpTo(s * _vh);
+    if (q['menu'] == '1') _menu.value = 1;
+    final theme = q['theme'];
+    if (theme == 'light' || theme == 'dark') ThemeScope.of(context).setMode(theme == 'light' ? ThemeMode.light : ThemeMode.dark);
+  }
+
+  double _cameraOffset() => HeroCameraBlock.transitionDistance(_vh);
+
+  /// Sahne [id]'sinin kaydırma ofseti (üst kenarı görünür alanın tepesine gelecek konum).
+  double? _offsetOf(String id) {
+    final ctx = _keys[id]?.currentContext;
+    final ro = ctx?.findRenderObject();
+    if (ro == null || !ro.attached) return null;
+    final viewport = RenderAbstractViewport.maybeOf(ro);
+    return viewport?.getOffsetToReveal(ro, 0).offset;
+  }
+
+  /// Mıknatıs çapaları: her sahnenin başlangıcı (artan sıralı).
+  List<double> _anchors() {
+    final list = <double>[0, _cameraOffset()];
+    for (final id in ['products', 'screen', 'services', 'process', 'references', 'contact']) {
+      final o = _offsetOf(id);
+      if (o != null) list.add(o);
+    }
+    list.sort();
+    return list;
+  }
+
+  double? _targetFor(String id) => id == 'camera' ? _cameraOffset() : _offsetOf(id);
+
+  void _onScroll() {
+    final y = _scroll.offset;
+    final scrolled = y > 24;
+    final active = _activeFor(y);
+    if (scrolled != _scrolled || active != _active) {
+      setState(() {
+        _scrolled = scrolled;
+        _active = active;
+      });
+    }
+  }
+
+  /// Üst çubukta vurgulanacak bölüm (ekranın üst %40'ına gelen son sahne).
+  String? _activeFor(double y) {
+    final probe = y + _vh * 0.4;
+    String? current;
+    for (final item in kNavItems) {
+      final o = _targetFor(item.id);
+      if (o != null && o <= probe) current = item.id;
+    }
+    return current;
+  }
+
+  void _goTo(String id) {
+    final target = _targetFor(id);
+    if (target == null) return;
+    if (_menu.value > 0) _menu.reverse();
+    _snap.scrollTo(target);
+  }
+
+  void _toggleMenu() {
+    if (_menu.status == AnimationStatus.forward || _menu.status == AnimationStatus.completed) {
+      _menu.reverse();
+    } else {
+      _menu.forward();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _snap.reduceMotion = reduceMotionOf(context);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _vh = constraints.maxHeight;
+        return ScrollScope(
+          controller: _scroll,
+          viewportHeight: _vh,
+          child: Scaffold(
+            backgroundColor: context.colors.bg,
+            body: Stack(
+              children: [
+                NotificationListener<ScrollNotification>(
+                  onNotification: _snap.onNotification,
+                  child: SingleChildScrollView(
+                    controller: _scroll,
+                    child: Column(
+                      children: [
+                        HeroCameraBlock(
+                          cameraBuilder: (context, reveal) => CameraScene(reveal: reveal),
+                          onExplore: () => _goTo('camera'),
+                          onContact: () => _goTo('contact'),
+                        ),
+                        RemoteDoorScene(key: _keys['products'], onContact: () => _goTo('contact')),
+                        ScreenDoorScene(key: _keys['screen'], onContact: () => _goTo('contact')),
+                        ServicesScene(key: _keys['services']),
+                        ProcessScene(key: _keys['process']),
+                        ReferencesScene(key: _keys['references']),
+                        const TeklifBand(),
+                        ContactScene(key: _keys['contact']),
+                      ],
+                    ),
+                  ),
+                ),
+                MenuPanel(
+                  menu: _menu,
+                  activeId: _active,
+                  onNav: _goTo,
+                  onClose: _menu.reverse,
+                  onTeklif: () => openLink(Contact.teklifPro),
+                ),
+                // Üst çubuk panelin üzerinde kalır: sandviç düğmesi açıkken kapatma düğmesine dönüşür.
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: TopBar(
+                    scrolled: _scrolled,
+                    activeId: _active,
+                    menu: _menu,
+                    onNav: _goTo,
+                    onToggleMenu: _toggleMenu,
+                    onLogo: () => _snap.scrollTo(0),
+                    onTeklif: () => openLink(Contact.teklifPro),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

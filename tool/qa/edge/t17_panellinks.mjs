@@ -1,0 +1,20 @@
+import { openE, shotE, arg, sleep, report, tap } from './lib2.mjs';
+const size = arg(0, 'd1440');
+const s = await openE({ browser: 'edge', size, theme: 'dark', menu: true });
+const w = s.page.viewportSize().width;
+const px = w - 400 + 120; // panel link x
+const ys = { Kamera: 173, 'Ürünler': 226, Hizmetler: 279, 'Süreç': 332, Referanslar: 385, 'İletişim': 438 };
+await sleep(2500);
+await tap(s, px, ys.Hizmetler); await sleep(1000);
+console.log('panel while closing +1s', await shotE(s, `pl_closing`));
+await sleep(2500);
+console.log('after Hizmetler', await shotE(s, `pl_hizmetler`));
+await tap(s, w - 52, 32); await sleep(2200);
+console.log('reopen', await shotE(s, `pl_reopen`));
+await tap(s, px, ys['İletişim']); await sleep(3500);
+console.log('after İletişim', await shotE(s, `pl_iletisim`));
+await tap(s, w - 52, 32); await sleep(2200);
+await tap(s, px, ys.Kamera); await sleep(3500);
+console.log('after Kamera', await shotE(s, `pl_kamera`));
+console.log(report(s));
+await s.close();

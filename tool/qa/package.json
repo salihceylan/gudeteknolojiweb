@@ -1,0 +1,9 @@
+{
+  "name": "gudeteknolojiweb-qa",
+  "private": true,
+  "type": "module",
+  "description": "Siteyi gerçek tarayıcılarda (Chrome, Edge, Android Chrome) gezip hata arayan geliştirici araçları. Siteye dahil değildir.",
+  "dependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

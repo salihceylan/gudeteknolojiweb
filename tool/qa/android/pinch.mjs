@@ -1,0 +1,13 @@
+import { connect, shot, sleep, tapCss } from './lib.mjs';
+const s = await connect();
+console.log(await s.page.evaluate(() => [...document.querySelectorAll('meta')].map((m) => m.outerHTML)));
+const c = await s.ctx.newCDPSession(s.page);
+const g = () => s.page.evaluate(() => ({ scale: visualViewport.scale, w: visualViewport.width, ox: visualViewport.offsetLeft, oy: visualViewport.offsetTop, ih: innerHeight }));
+console.log('before', await g());
+await c.send('Input.synthesizePinchGesture', { x: 206, y: 400, scaleFactor: 2.0, relativeSpeed: 300, gestureSourceType: 'touch' });
+await sleep(2500);
+console.log('after pinch', await g(), await shot(s, 'pz_1'));
+await c.send('Input.synthesizePinchGesture', { x: 206, y: 400, scaleFactor: 0.4, relativeSpeed: 300, gestureSourceType: 'touch' });
+await sleep(2500);
+console.log('after unpinch', await g(), await shot(s, 'pz_2'));
+process.exit(0);

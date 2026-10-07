@@ -1,0 +1,16 @@
+import { open, shot, sleep, report, tap } from './common.mjs';
+const s = await open({ theme: 'dark' });
+await sleep(1500);
+const P = s.page;
+const step = async (name, fn, wait = 2600) => { await fn(); await sleep(wait); console.log(name, await shot(s, 't5k_' + name)); };
+await step('A_pagedown_noclick', () => P.keyboard.press('PageDown'));
+await step('B_click_then_pagedown', async () => { await tap(s, 600, 800); await P.keyboard.press('PageDown'); });
+await step('C_arrowdown', () => P.keyboard.press('ArrowDown'));
+await step('D_space', () => P.keyboard.press('Space'));
+await step('E_pagedown2', () => P.keyboard.press('PageDown'));
+await step('F_end', () => P.keyboard.press('End'), 3500);
+await step('G_home', () => P.keyboard.press('Home'), 3500);
+await step('H_arrowdown_x5', async () => { for (let i = 0; i < 5; i++) { await P.keyboard.press('ArrowDown'); await sleep(40); } });
+await step('I_arrowup', () => P.keyboard.press('ArrowUp'));
+console.log(report(s));
+await s.close();

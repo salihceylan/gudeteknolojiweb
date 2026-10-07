@@ -1,0 +1,24 @@
+import { launch, ready, sleep, URL0, OUT } from './util.mjs';
+import fs from 'node:fs';
+const mode = process.argv[2] || 'reduce';
+const action = process.argv[3] || 'theme';   // theme | menu
+const s = await launch({ reducedMotion: mode });
+const { page } = s;
+await page.goto(URL0, { waitUntil: 'load' });
+await ready(page); await sleep(3000);
+const cdp = await s.ctx.newCDPSession(page);
+const dir = `${OUT}/sc_${mode}_${action}`; fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
+const frames = [];
+cdp.on('Page.screencastFrame', async (f) => { frames.push({ t: f.metadata.timestamp, data: f.data }); try { await cdp.send('Page.screencastFrameAck', { sessionId: f.sessionId }); } catch {} });
+await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 50, everyNthFrame: 1, maxWidth: 480, maxHeight: 300 });
+await sleep(600);
+const t0 = Date.now();
+const pt = action === 'theme' ? [1340, 32] : [1388, 32];
+await page.mouse.move(pt[0], pt[1]); await sleep(100);
+const tClick = Date.now() / 1000;
+await page.mouse.down(); await page.mouse.up();
+await sleep(2500);
+await cdp.send('Page.stopScreencast');
+frames.forEach((f, i) => fs.writeFileSync(`${dir}/${String(i).padStart(3, '0')}_${(f.t - frames[0].t).toFixed(3)}.jpg`, Buffer.from(f.data, 'base64')));
+console.log(mode, action, 'frames', frames.length, 'click at +', (tClick - frames[0].t).toFixed(2));
+await s.close();

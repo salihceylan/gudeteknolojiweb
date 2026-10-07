@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Güde Teknoloji: CCTV, interkom, geçiş kontrol, turnike ve bariyer, yangın algılama ve akıllı ev sistemlerinde keşiften servise uçtan uca çözümler. Karşıyaka / İzmir.">
+  <link rel="canonical" href="https://gudeteknoloji.com/">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Güde Teknoloji">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Güde Teknoloji | Zayıf Akım ve Teknoloji Sistemleri</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#06080B">
+  <meta name="color-scheme" content="dark">
+  <script>
+    // Flutter açılmadan önce kayıtlı temayı uygular: açık tercih eden ziyaretçi koyu bir yükleme ekranı ve parlama görmez.
+    // Anahtar ve varsayılan (koyu), lib/core/theme_store_web.dart ve lib/theme.dart (kDefaultThemeMode) ile aynıdır;
+    // zemin renkleri lib/theme.dart'taki bg ile eşleşir. Flutter açılınca ThemeStore.applyChrome aynı öznitelikleri günceller.
+    (function () {
+      var mode = 'dark';
+      try {
+        var saved = localStorage.getItem('gude-theme');
+        if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved;
+      } catch (e) {}
+      var dark = mode === 'dark' ||
+        (mode === 'system' && !(window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches));
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      var theme = document.querySelector('meta[name="theme-color"]');
+      if (theme) theme.setAttribute('content', dark ? '#06080B' : '#F4F5F7');
+      var scheme = document.querySelector('meta[name="color-scheme"]');
+      if (scheme) scheme.setAttribute('content', dark ? 'dark' : 'light');
+    })();
+  </script>
+  <style>
+    :root { --boot-bg: #06080B; --boot-line: #58D6CB; --boot-text: #A3ACB9; color-scheme: dark; }
+    :root[data-theme="light"] { --boot-bg: #F4F5F7; --boot-line: #0E9F94; --boot-text: #4A5463; color-scheme: light; }
+    html, body { margin: 0; height: 100%; background: var(--boot-bg); }
+    /* Flutter açılırken beyaz parlama yerine sakin bir yükleme çizgisi görünür */
+    #boot { position: fixed; inset: 0; display: grid; place-items: center; align-content: center; gap: 28px; background: var(--boot-bg); transition: opacity .5s ease; }
+    #boot i { display: block; width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--boot-line), transparent); animation: bootline 1.6s ease-in-out infinite; }
+    @keyframes bootline { 0%, 100% { opacity: .15; transform: scaleX(.4); } 50% { opacity: 1; transform: scaleX(1); } }
+    /* Yükleme başarısız olursa çizginin altında görünür */
+    #boot-fail { margin: 0; padding: 0 24px; max-width: 360px; text-align: center; font: 15px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--boot-text); }
+    #boot-fail[hidden] { display: none; }
+    #boot-fail button { margin-top: 16px; padding: 10px 22px; border: 1px solid var(--boot-line); border-radius: 22px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+    #boot-fail button:focus-visible { outline: 2px solid var(--boot-line); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <div id="boot"><i aria-hidden="true"></i><p id="boot-fail" role="alert" hidden>Sayfa yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.<br><button type="button" onclick="location.reload()">Yeniden dene</button></p></div>
+  <noscript>
+    <p style="position:fixed;inset:0;margin:0;display:grid;place-items:center;padding:24px;text-align:center;font:16px/1.6 system-ui,sans-serif;background:#06080B;color:#F3F5F8">
+      Güde Teknoloji: CCTV, interkom, geçiş kontrol, turnike ve bariyer, yangın algılama ve akıllı ev sistemleri. Bu sayfanın çalışması için JavaScript gereklidir.
+    </p>
+  </noscript>
+  <script>
+    (function () {
+      var failed = false;
+      var b = document.getElementById('boot');
+      // Yükleme kesilirse (CDN/ağ engeli, bozuk önbellek) ziyaretçi sonsuza dek çizgiye bakmasın: ileti ve yenile düğmesi.
+      function fail() {
+        var msg = document.getElementById('boot-fail');
+        if (failed || !b || !msg) return;
+        failed = true;
+        msg.hidden = false;
+      }
+      var timer = setTimeout(fail, 20000);
+      // Betik (flutter_bootstrap.js, canvaskit.js, main.dart.js) yüklenemezse beklemeden bildir; kaynak hataları kabarmaz,
+      // bu yüzden "error" yakalama aşamasında dinlenir. Eksik simge gibi önemsiz kaynaklar (LINK/IMG) iletiyi tetiklemez.
+      window.addEventListener('error', function (e) {
+        var t = e.target;
+        if (t && t !== window && t.tagName === 'SCRIPT') fail();
+      }, true);
+      window.addEventListener('flutter-first-frame', function () {
+        clearTimeout(timer);
+        if (!b) return;
+        b.style.opacity = '0';
+        setTimeout(function () { b.remove(); }, 600);
+      });
+    })();
+  </script>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

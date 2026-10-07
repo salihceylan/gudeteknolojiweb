@@ -1,0 +1,10 @@
+import { openM, shot, sleep, report, tap } from './lib.mjs';
+const dev = process.argv[2] || 'tablet', theme = process.argv[3] || 'light';
+const s = await openM(dev, theme);
+const vp = s.page.viewportSize(); await sleep(2500);
+await tap(s, vp.width - 36, 32); await sleep(300); console.log(await shot(s, 'm17_open_mid')); await sleep(1500); console.log(await shot(s, 'm17_open'));
+await tap(s, 100, vp.height * 0.6); await sleep(300); console.log(await shot(s, 'm17_close_mid')); await sleep(1500); console.log(await shot(s, 'm17_closed_by_scrim'));
+await tap(s, vp.width - 36, 32); await sleep(1800);
+await tap(s, vp.width - 36, 32); await sleep(1800); console.log(await shot(s, 'm17_closed_by_btn'));
+console.log(report(s));
+await s.close();

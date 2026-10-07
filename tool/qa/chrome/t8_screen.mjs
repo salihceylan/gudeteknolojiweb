@@ -1,0 +1,25 @@
+import { open, shot, sleep, report, tap, startCast } from './common.mjs';
+import fs from 'node:fs';
+const th = process.argv[2] || 'dark';
+const s = await open({ theme: th });
+await sleep(2000);
+const P = s.page; await P.mouse.move(700, 300);
+await tap(s, 827, 29); await sleep(3500);
+await P.mouse.move(700, 450); await P.mouse.wheel(0, 130); await sleep(3500);
+console.log('scene', await shot(s, 't8_scene_a'));
+await sleep(5000);
+console.log('scene later', await shot(s, 't8_scene_b'));
+// hover butona
+await P.mouse.move(376, 545); await sleep(1200);
+console.log('hover', await shot(s, 't8_hover'));
+const cast = await startCast(s, 'door_' + th, { quality: 75 });
+await P.mouse.down(); await sleep(60); await P.mouse.up();
+const tClick = Date.now() - cast.t0;
+await sleep(5500);
+const fr = await cast.stop();
+fs.writeFileSync(cast.frames[0].file.replace(/\d+\.jpg$/, 'times.json'), JSON.stringify({ tClick, t: fr.map((f) => f.t) }));
+console.log('click at', tClick, 'frames', fr.length);
+await P.mouse.move(900, 800); await sleep(1500);
+console.log('after', await shot(s, 't8_after'));
+console.log(report(s));
+await s.close();

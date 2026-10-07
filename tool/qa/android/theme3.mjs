@@ -1,0 +1,14 @@
+import { connect, shot, tapCss, sleep, rep, adb, probeTouches, touches } from './lib.mjs';
+const s = await connect();
+await probeTouches(s);
+const ls = () => s.page.evaluate(() => [localStorage.getItem('gude-theme'), matchMedia('(prefers-color-scheme: dark)').matches]);
+tapCss(375, 30); await sleep(2500);
+console.log('menu', JSON.stringify(await touches(s)), await shot(s, 'th3_menu'));
+tapCss(232, 728); await sleep(2500);
+console.log('sistem (night no)', await ls(), await shot(s, 'th3_sys_day'));
+adb('shell', 'cmd', 'uimode', 'night', 'yes'); await sleep(5000);
+console.log('sistem (night yes)', await ls(), await shot(s, 'th3_sys_night'));
+adb('shell', 'cmd', 'uimode', 'night', 'no'); await sleep(5000);
+console.log('sistem (night no again)', await ls(), await shot(s, 'th3_sys_day2'));
+console.log(rep(s));
+process.exit(0);

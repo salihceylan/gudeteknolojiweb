@@ -1,0 +1,14 @@
+import { openR, shotR, arg, sleep, report, measureFrames } from './r2lib.mjs';
+const size = arg(0, 'd1440'), theme = arg(1, 'dark');
+const s = await openR({ size, theme });
+await sleep(2500);
+console.log('load ms', s.loadMs);
+console.log(await shotR(s, 'open'));
+const info = await s.page.evaluate(() => ({ lang: document.documentElement.lang, dt: document.documentElement.getAttribute('data-theme'), tc: document.querySelector('meta[name=theme-color]')?.content, cs: document.querySelector('meta[name=color-scheme]')?.content, ls: localStorage.getItem('gude-theme'), bg: getComputedStyle(document.body).backgroundColor, title: document.title }));
+console.log(JSON.stringify(info));
+const hosts = new Set(s.reqs.map((r) => new URL(r.split(' ')[0]).host));
+console.log('hosts', [...hosts].join(','));
+console.log(s.reqs.filter(r=>!r.startsWith('http://localhost')).join('\n'));
+console.log(JSON.stringify(await measureFrames(s, 2000)));
+console.log(report(s));
+await s.close();

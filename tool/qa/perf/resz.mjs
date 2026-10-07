@@ -1,0 +1,11 @@
+import { launch, ready, sleep, URL0, shot } from './util.mjs';
+const s = await launch({ viewport: { width: 1440, height: 500 } });
+const { page, log } = s;
+await page.goto(URL0 + `?scroll=7.4`, { waitUntil: 'load', timeout: 90000 });
+await ready(page); await sleep(3500);
+const a = await shot(page, 'resz_small');
+await page.setViewportSize({ width: 1440, height: 1300 });
+await sleep(3500);
+const b = await shot(page, 'resz_big_after_resize');
+console.log(a, b, log.errors);
+await s.close();

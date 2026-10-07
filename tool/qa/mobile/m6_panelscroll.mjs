@@ -1,0 +1,12 @@
+import { openM, shot, sleep, report, drag, collectLabelBoxes } from './lib.mjs';
+const dev = process.argv[2] || 'smallPhone', theme = process.argv[3] || 'dark';
+const s = await openM(dev, theme, 'menu=1');
+await sleep(2800);
+const vp = s.page.viewportSize();
+console.log(vp, await shot(s, 'm6_panel0'));
+const boxes = await collectLabelBoxes(s); await sleep(2500);
+console.log(boxes.filter(b => b.role === 'button').map(b => `${b.label.slice(0,30)} @${b.x},${b.y} ${b.width}x${b.height} ${b.y+b.height>vp.height?'OFFSCREEN':''}`).join('\n'));
+await drag(s, vp.width / 2, vp.height * 0.7, vp.width / 2, vp.height * 0.2, { steps: 10 }); await sleep(2000);
+console.log(await shot(s, 'm6_panel1'));
+console.log(report(s));
+await s.close();

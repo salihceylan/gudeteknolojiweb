@@ -1,0 +1,15 @@
+import { open, shot, sleep, report } from './harness.mjs';
+const s = await open({ browser: 'chrome', device: 'desktop', url: 'http://localhost:8099/', theme: 'dark', semantics: false });
+const p = s.page;
+console.log('semantics açık değil; koordinatla tıklama');
+await p.mouse.move(1388, 32); await sleep(300);
+await p.mouse.down(); await sleep(80); await p.mouse.up();
+await sleep(3000);
+console.log(await shot(s, 'click_coord_menu'));
+const sem = await p.evaluate(() => !!document.querySelector('flt-semantics'));
+console.log('semantics DOM var mı:', sem);
+await p.keyboard.press('Escape'); await sleep(1500);
+await p.mouse.move(1340, 32); await sleep(300); await p.mouse.down(); await sleep(80); await p.mouse.up(); await sleep(3500);
+console.log(await shot(s, 'click_coord_theme'));
+console.log(report(s));
+await s.close();

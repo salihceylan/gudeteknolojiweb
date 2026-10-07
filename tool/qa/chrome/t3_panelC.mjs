@@ -1,0 +1,27 @@
+import { open, shot, sleep, report, tap } from './common.mjs';
+const s = await open({});
+await sleep(1500);
+const P = s.page;
+const opened = [];
+s.ctx.on('page', (p) => { opened.push(p); p.on('framenavigated', (f) => opened.push('nav:' + f.url())); });
+const urls = async (label) => { await sleep(1800); console.log(label, JSON.stringify(opened.map((p) => (typeof p === 'string' ? p : p.url())))); for (const p of opened) if (typeof p !== 'string') { try { await p.close(); } catch {} } opened.length = 0; };
+await tap(s, 1249, 32); await urls('topbar Teklif Pro');
+await tap(s, 1388, 32); await sleep(1800);
+await tap(s, 1148, 539); await urls('panel Teklif Pro');
+await tap(s, 1180, 607); await urls('panel tel');
+await tap(s, 1180, 643); await urls('panel mail');
+await tap(s, 1180, 679); await urls('panel whatsapp');
+console.log('panel still open?', await shot(s, 't3C_after_links'));
+// tema seçici
+const ls = () => P.evaluate(() => localStorage.getItem('gude-theme'));
+const dt = () => P.evaluate(() => document.documentElement.getAttribute('data-theme'));
+await tap(s, 1122, 770); await sleep(1800); console.log('Açık ->', await ls(), await dt(), await shot(s, 't3C_sel_light'));
+await tap(s, 1198, 770); await sleep(1800); console.log('Koyu ->', await ls(), await dt(), await shot(s, 't3C_sel_dark'));
+await tap(s, 1283, 770); await sleep(1800); console.log('Sistem(dark pref) ->', await ls(), await dt(), await shot(s, 't3C_sel_sys_dark'));
+await P.emulateMedia({ colorScheme: 'light' }); await sleep(2500); console.log('Sistem + emulate light ->', await ls(), await dt(), await shot(s, 't3C_sys_light'));
+await P.emulateMedia({ colorScheme: 'dark' }); await sleep(2500); console.log('Sistem + emulate dark ->', await ls(), await dt());
+await tap(s, 1122, 770); await sleep(1500);
+await P.reload({ waitUntil: 'load' }); await sleep(4500);
+console.log('reload after Açık ->', await ls(), await dt(), await shot(s, 't3C_reload_light'));
+console.log(report(s));
+await s.close();

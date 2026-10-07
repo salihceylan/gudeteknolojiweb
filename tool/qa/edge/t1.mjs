@@ -1,0 +1,12 @@
+import { openEnv, shot, report, measureFrames, collectLabelBoxes, sleep } from './lib.mjs';
+const t0 = Date.now();
+const s = await openEnv({ browser: 'edge', device: 'desktop', theme: 'dark' });
+console.log('load ms', Date.now() - t0);
+await sleep(2500);
+console.log(await shot(s, 't1_top'));
+console.log(JSON.stringify(await measureFrames(s, 2000)));
+console.log(await s.page.evaluate(() => ({ ua: navigator.userAgent, sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth, ls: localStorage.getItem('gude-theme'), title: document.title, lang: document.documentElement.lang })));
+const boxes = await collectLabelBoxes(s);
+console.log(boxes.map(b => `${b.role}|${b.label}@${b.x},${b.y} ${b.width}x${b.height}`).join('\n'));
+console.log(report(s));
+await s.close();

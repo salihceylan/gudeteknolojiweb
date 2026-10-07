@@ -1,0 +1,16 @@
+import { open, shot, sleep, report, tap } from './common.mjs';
+const s = await open({});
+await sleep(1500);
+const P = s.page;
+const opened = [];
+s.ctx.on('page', (p) => { opened.push(p); p.on('framenavigated', (f) => opened.push('nav:' + f.url())); });
+const urls = async (label) => { await sleep(1800); console.log(label, JSON.stringify(opened.map((p) => (typeof p === 'string' ? p : p.url())))); for (const p of opened) if (typeof p !== 'string') { try { await p.close(); } catch {} } opened.length = 0; };
+await tap(s, 1249, 32); await urls('topbar Teklif Pro');
+await tap(s, 1388, 32); await sleep(1800);
+await tap(s, 1148, 539); await urls('panel Teklif Pro');
+await tap(s, 1180, 607); await urls('panel tel');
+await tap(s, 1180, 643); await urls('panel mail');
+await tap(s, 1180, 679); await urls('panel whatsapp');
+console.log('panel still open?', await shot(s, 't3C_after_links'));
+console.log(report(s));
+await s.close();

@@ -1,0 +1,10 @@
+import { openE, arg, sleep, report } from './lib2.mjs';
+const browser = arg(0, 'edge');
+const reqs = [];
+const s = await openE({ browser, size: 'd1440', theme: 'dark', pre: async (s) => { s.page.on('requestfinished', async (r) => { try { const resp = await r.response(); const sz = (await r.sizes()).responseBodySize; reqs.push(`${resp.status()} ${sz} ${r.url()}`); } catch {} }); } });
+await sleep(2500);
+console.log('loadMs', s.loadMs);
+console.log(reqs.join('\n'));
+console.log(await s.page.evaluate(() => ({ lang: document.documentElement.lang, fonts: [...document.fonts].map((f) => f.family + ' ' + f.status).slice(0, 20), mem: performance.memory && { used: performance.memory.usedJSHeapSize, total: performance.memory.totalJSHeapSize } })));
+console.log(report(s));
+await s.close();

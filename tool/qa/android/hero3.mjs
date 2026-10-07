@@ -1,0 +1,12 @@
+import { connect, shot, tapCss, sleep, adb } from './lib.mjs';
+const s = await connect();
+const foc = () => adb('shell', 'dumpsys', 'window').split('\n').filter((l) => l.includes('mCurrentFocus')).join('').trim().slice(0, 100);
+console.log(foc());
+tapCss(171, 269); await sleep(5000);
+console.log('explore', await shot(s, 'h3_1'));
+tapCss(47, 30); await sleep(5000);
+console.log('logo', await shot(s, 'h3_2'));
+tapCss(84, 325); await sleep(5000);
+console.log('contact', await shot(s, 'h3_3'));
+console.log(foc());
+process.exit(0);

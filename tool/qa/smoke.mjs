@@ -1,0 +1,13 @@
+import { open, shot, scrollBy, measureFrames, report, byLabel } from './harness.mjs';
+const t0 = Date.now(); const log = (...a) => console.log(((Date.now() - t0) / 1000).toFixed(1) + 's', ...a);
+log('açılıyor');
+const s = await open({ browser: 'chrome', device: 'desktop', url: 'http://localhost:8099/', theme: 'dark' });
+log('açıldı');
+log(await shot(s, 'smoke_top'));
+log('semantics menü düğmesi sayısı:', await byLabel(s, 'Menüyü aç veya kapat').count());
+log('kare:', JSON.stringify(await measureFrames(s, 1500)));
+await scrollBy(s, 600);
+log(await shot(s, 'smoke_scrolled'));
+log(report(s));
+await s.close();
+log('bitti');

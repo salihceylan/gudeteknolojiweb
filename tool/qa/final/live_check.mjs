@@ -1,0 +1,13 @@
+import { open, shot, tap, sleep, report } from '../harness.mjs';
+const LIVE = 'http://gudeteknoloji.com/';
+const s = await open({ browser: 'chrome', device: 'desktop', url: LIVE, theme: 'dark' });
+await sleep(1500);
+const info = await s.page.evaluate(() => ({ lang: document.documentElement.lang, title: document.title, loc: location.href }));
+console.log('canlı:', JSON.stringify(info));
+console.log(await shot(s, 'live_open'));
+await s.page.mouse.move(720, 450); await s.page.mouse.wheel(0, 100); await sleep(4000);
+console.log(await shot(s, 'live_notch'));
+await tap(s, 1386, 32); await sleep(2500);
+console.log(await shot(s, 'live_panel'));
+console.log(report(s));
+await s.close();

@@ -1,0 +1,13 @@
+import { open, shot, collectLabelBoxes, measureFrames, report, sleep } from '../harness.mjs';
+const dev = process.argv[2] || 'iphone', theme = process.argv[3] || 'dark';
+const t0 = Date.now();
+const s = await open({ device: dev, theme, url: 'http://localhost:8099/', query: 'theme=' + theme });
+console.log('load ms', Date.now() - t0);
+await sleep(2500);
+console.log(await shot(s, 'm1_hero'));
+console.log(JSON.stringify(await measureFrames(s, 2000)));
+const boxes = await collectLabelBoxes(s);
+console.log(boxes.map(b => `${b.role||'-'} | ${b.label.slice(0,40)} @${b.x},${b.y} ${b.width}x${b.height}`).join('\n'));
+console.log(await s.page.evaluate(() => ({sw: document.documentElement.scrollWidth, iw: innerWidth, bw: document.body.scrollWidth, ih: innerHeight, dpr: devicePixelRatio, ls: localStorage.getItem('gude-theme')})));
+console.log(report(s));
+await s.close();

@@ -1,0 +1,49 @@
+
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^teklif\.gudeteknoloji\.com$
+RewriteRule ^/?$ "http\:\/\/178\.210\.161\.55\/" [R=301,L]
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php72” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php72 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
+
+# Flutter CanvasKit (WebAssembly) için doğru MIME türü; olmazsa tarayıcı .wasm dosyasını reddeder.
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+</IfModule>
+
+# Sıkıştırma: CanvasKit (.wasm, 5-7 MB) ve metin tabanlı dosyalar; indirme boyutunu belirgin azaltır.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/wasm application/javascript application/json text/html text/css image/svg+xml
+</IfModule>
+
+# Önbellek: giriş dosyaları her zaman doğrulanır (güncelleme hemen görünür); .wasm bir hafta saklanır.
+# main.dart.<özet>.js dosyasının adı her sürümde değiştiği için uzun süre saklanması güvenlidir.
+<IfModule mod_headers.c>
+  <FilesMatch "^(index\.html|flutter_bootstrap\.js|version\.json|manifest\.json)$">
+    Header set Cache-Control "no-cache"
+    Header unset Expires
+  </FilesMatch>
+  <FilesMatch "\.wasm$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+
+# CanvasKit .wasm dosyaları önceden gzip'lenmiştir (.wasm.gz): tarayıcı gzip destekliyorsa onlar sunulur (5.4 MB -> 2.1 MB).
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteCond %{HTTP:Accept-Encoding} gzip
+  RewriteCond %{REQUEST_FILENAME}.gz -f
+  RewriteRule ^(.+\.wasm)$ $1.gz [L]
+</IfModule>
+<FilesMatch "\.wasm\.gz$">
+  ForceType application/wasm
+  <IfModule mod_headers.c>
+    Header set Content-Encoding gzip
+    Header set Vary Accept-Encoding
+    Header set Cache-Control "public, max-age=604800"
+  </IfModule>
+</FilesMatch>
